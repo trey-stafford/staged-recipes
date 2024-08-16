@@ -1,0 +1,57 @@
+{% set version = "0.1.0"  %}
+{% set sha256 = "2d2539ddb452a82f5b2d8195bdeab3e2c021cb1d693ca7a18cea91d34734fb5a" %}
+{% set build_number = 0 %}
+
+
+package:
+  name: iceflow
+  version: {{ version }}
+
+source:
+  url: "https://github.com/nsidc/iceflow/archive/{{ version }}.tar.gz"
+  sha256: {{ sha256 }}
+
+build:
+  number: "{{ build_number }}"
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  noarch: python
+
+requirements:
+  host:
+    - python ~=3.10
+    - numpy >=2.0.1
+
+  run:
+    - python ~=3.10
+    - {{ pin_compatible('numpy') }}
+
+    - earthaccess ~=0.10.0
+    - pandas ~=2.2
+    - h5py ~=3.11
+    - gps-timemachine ~=1.1.4
+    - pyproj ~=3.6.1
+    - shapely ~=2.0.5
+    - pandera[mypy] ~=0.20.3
+
+test:
+  imports:
+    - iceflow
+    - iceflow.api
+    - iceflow.data.atm1b
+  commands:
+    - pip check
+  requires:
+    - pip
+
+
+about:
+  home: https://github.com/nsidc/iceflow
+  license: MIT
+  license_file: LICENSE
+  summary: "Harmonized access to (pre)OIB/IceSAT/IceSAT2 data"
+
+
+extra:
+  recipe-maintainers:
+    - trey-stafford
+    - mfisher87
